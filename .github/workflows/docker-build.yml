@@ -40,7 +40,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           # Kontext ist das Repo-Root, wo dein Dockerfile liegt
-          context: .
+          context: ./addon-hyperhdr
           # Wir bauen und pushen zugleich
           push: true
           # Alle drei relevanten Plattformen
