@@ -2,9 +2,11 @@ name: Build & Push HyperHDR Add-on Images
 
 # Trigger: bei jedem Push auf main und bei jedem Git-Tag v*
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+      - master
     tags:
       - 'v*'
 
