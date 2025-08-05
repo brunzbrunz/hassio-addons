@@ -1,0 +1,54 @@
+name: Build & Push HyperHDR Add-on Images
+
+# Trigger: bei jedem Push auf main und bei jedem Git-Tag v*
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  docker_build_and_push:
+    # Läuft auf einem Ubuntu-Runner in der GitHub-Cloud
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Repository-Code auschecken
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2) QEMU einrichten, damit wir ARM-Images auf x86 bauen können
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      # 3) Buildx einrichten für Multi-Arch-Builds
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # 4) Bei Docker Hub anmelden
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 5) Build & Push für alle Plattformen
+      - name: Build and push multi-arch image
+        uses: docker/build-push-action@v5
+        with:
+          # Kontext ist das Repo-Root, wo dein Dockerfile liegt
+          context: .
+          # Wir bauen und pushen zugleich
+          push: true
+          # Alle drei relevanten Plattformen
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          # Tag-Konvention: nutze Git-Tag oder Branch
+          tags: |
+            jonah1024/hyperhdr-addon:latest
+            jonah1024/hyperhdr-addon:${{ github.ref_name }}
+          # Build-Argumente an dein Dockerfile weiterreichen
+          build-args: |
+            BUILD_VERSION=${{ github.ref_name }}
+            DOWNLOAD_URL=https://github.com/awawa-dev/HyperHDR/releases/download
+
