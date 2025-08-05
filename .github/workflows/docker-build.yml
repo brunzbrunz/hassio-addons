@@ -35,7 +35,6 @@ jobs:
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v "${{ github.workspace }}/addon-hyperhdr":/data \
             homeassistant/amd64-builder \
-            --platform linux/amd64 \
             --docker-user ${{ secrets.DOCKER_USERNAME }} \
             --docker-password ${{ secrets.DOCKER_PASSWORD }} \
             --target /data \
@@ -48,7 +47,6 @@ jobs:
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v "${{ github.workspace }}/addon-hyperhdr":/data \
             homeassistant/armv7-builder \
-            --platform linux/arm/v7 \
             --docker-user ${{ secrets.DOCKER_USERNAME }} \
             --docker-password ${{ secrets.DOCKER_PASSWORD }} \
             --target /data \
@@ -61,9 +59,9 @@ jobs:
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v "${{ github.workspace }}/addon-hyperhdr":/data \
             homeassistant/aarch64-builder \
-            --platform linux/arm64 \
             --docker-user ${{ secrets.DOCKER_USERNAME }} \
             --docker-password ${{ secrets.DOCKER_PASSWORD }} \
             --target /data \
             --no-latest \
             --push
+
